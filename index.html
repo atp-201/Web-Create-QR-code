@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tạo QR Code Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Tạo QR Code</h1>
+
+    <input type="text" id="text" placeholder="Nhập link hoặc nội dung" />
+
+    <button id="generateBtn">Tạo QR</button>
+
+    <div id="qrcode"></div>
+
+    <button id="downloadBtn">Tải QR (PNG)</button>
+
+    <div class="note">QR code được tạo ngay trên trình duyệt</div>
+  </div>
+
+  <!-- Thư viện QR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>
