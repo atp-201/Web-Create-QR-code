@@ -13,67 +13,79 @@
 </head>
 <body>
 
-<div class="container">
+<div class="app-bg"></div>
 
-  <!-- TIÊU ĐỀ -->
-  <h1>Tạo QR Code</h1>
+<div class="container glass">
 
-  <!-- NHẬP NỘI DUNG -->
-  <input id="textInput" type="text" placeholder="Nhập link hoặc nội dung">
+  <div class="header">
+    <h1>✨ QR Code Generator</h1>
+    <p>Tạo QR nhanh</p>
+  </div>
 
+  <div class="card">
 
-  <!-- TUỲ CHỌN -->
-  <div class="options">
+    <input id="textInput" type="text" placeholder="🔗 Nhập link hoặc nội dung">
 
-    <label>Độ dày viền</label>
-    <select id="borderSize">
-      <option value="0">Không viền</option>
-      <option value="2">2px</option>
-      <option value="4">4px</option>
-      <option value="8">8px</option>
-      <option value="12">12px</option>
-    </select>
+    
 
-    <label>Chọn màu viền</label>
-    <input type="color" id="borderColor" value="#000000">
+    <div class="options">
 
-    <label>Bo góc QR</label>
-    <select id="radiusSelect">
-      <option value="0">Vuông</option>
-      <option value="8">Bo nhẹ</option>
-      <option value="12">Bo vừa</option>
-      <option value="20">Bo nhiều</option>
-    </select>
+      <div class="option">
+        <label>Độ dày viền</label>
+        <select id="borderSize">
+          <option value="0">Không viền</option>
+          <option value="4">4px</option>
+          <option value="8">8px</option>
+          <option value="12">12px</option>
+        </select>
+      </div>
 
-    <label>Chọn logo (tuỳ chọn)</label>
+      <div class="option">
+        <label>Màu viền</label>
+        <input type="color" id="borderColor" value="#4f46e5">
+      </div>
 
-    <div class="logo-box">
+      <div class="option">
+        <label>Bo góc QR</label>
+        <select id="radiusSelect">
+          <option value="0">Vuông</option>
+          <option value="12">Bo nhẹ</option>
+          <option value="20">Bo nhiều</option>
+        </select>
+      </div>
+
+      <div class="option">
+        <label>Logo trung tâm</label>
         <input type="file" id="logoInput" accept="image/*">
 
         <div class="logo-actions">
-            <button type="button" id="changeLogoBtn">Đổi logo</button>
-            <button type="button" id="removeLogoBtn">Xóa logo</button>
+          <button id="changeLogoBtn">Đổi</button>
+          <button id="removeLogoBtn">Xóa</button>
         </div>
 
-        <img id="logoPreview" alt="Logo preview">
+        <img id="logoPreview">
+      </div>
+
     </div>
+
   </div>
 
-  <!-- QR GỐC (ẨN) -->
-  <div id="qrcode" hidden></div>
+  <div class="preview-card">
+    <canvas id="previewCanvas"></canvas>
+  </div>
+  <button id="generateBtn" class="primary-btn">
+      ⚡ Tạo QR ngay
+  </button>
 
-  <!-- PREVIEW QR -->
-  <canvas id="previewCanvas"></canvas>
-
-  <!-- NÚT TẠO QR (CHÍNH) -->
-  <button id="generateBtn" class="primary-btn">Tạo QR</button>
-  
-  <!-- TẢI QR -->
-  <button id="downloadBtn" class="secondary-btn">Tải QR PNG</button>
+  <button id="downloadBtn" class="download-btn">
+    ⬇️ Tải QR PNG
+  </button>
 
 </div>
 
-<!-- JS -->
+<div id="qrcode" hidden></div>
+
 <script src="script.js"></script>
 </body>
+
 </html>
