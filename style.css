@@ -1,79 +1,136 @@
+/* RESET */
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
   background: #f4f6f8;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
 }
 
+/* KHUNG CHÍNH */
 .container {
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
   background: #fff;
-  padding: 24px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 420px;
-  text-align: center;
 }
 
+/* TIÊU ĐỀ */
 h1 {
+  text-align: center;
   margin-bottom: 16px;
-  font-size: 22px;
 }
 
-input {
+/* INPUT */
+input, select {
   width: 100%;
   padding: 10px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
   margin-bottom: 12px;
+  font-size: 15px;
 }
 
-button {
+/* NÚT TẠO QR */
+.primary-btn {
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   font-size: 16px;
-  border: none;
-  border-radius: 6px;
+  font-weight: bold;
   background: #2563eb;
   color: #fff;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 8px;
+  position: sticky;
+  top: 10px;
+  z-index: 10;
 }
 
-button:hover {
+.primary-btn:hover {
   background: #1e40af;
 }
 
-#downloadBtn {
-  display: none;
-  background: #16a34a;
+/* TUỲ CHỌN */
+.options label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 4px;
 }
 
-#downloadBtn:hover {
+/* PREVIEW LOGO */
+#logoPreview {
+  display: none;
+  max-width: 120px;
+  margin: 8px auto;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+/* PREVIEW QR */
+#previewCanvas {
+  display: none;
+  margin: 16px auto;
+  max-width: 100%;
+}
+
+/* NÚT TẢI */
+.secondary-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
   background: #15803d;
 }
 
-#qrcode {
-  margin-top: 20px;
+/* MOBILE */
+@media (max-width: 480px) {
+  .container {
+    margin: 10px;
+  }
 }
 
-.note {
-  font-size: 13px;
-  color: #555;
-  margin-top: 10px;
+/* BOX LOGO */
+.logo-box {
+  text-align: center;
 }
 
+/* NÚT ĐỔI / XOÁ LOGO */
+.logo-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
 
-#qrcode {
-  margin-top: 20px;
-  display: inline-block;
-  padding: 12px;              /* khoảng cách giữa QR và viền */
-  border: 3px solid #2563eb;  /* màu viền */
-  border-radius: 12px;        /* bo góc */
-  background: #fff;           /* nền trắng */
+.logo-actions button {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+#changeLogoBtn {
+  background: #2563eb;
+  color: #fff;
+}
+
+#removeLogoBtn {
+  background: #dc2626;
+  color: #fff;
+}
+
+#changeLogoBtn:hover {
+  background: #1e40af;
+}
+
+#removeLogoBtn:hover {
+  background: #b91c1c;
 }
