@@ -1,32 +1,79 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Tạo QR Code Online</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Tạo QR Code</h1>
-
-    <input type="text" id="text" placeholder="Nhập link hoặc nội dung" />
-
-    <button id="generateBtn">Tạo QR</button>
-
-    <div id="qrcode"></div>
-
-    <button id="downloadBtn">Tải QR (PNG)</button>
-
-    <div class="note">QR code được tạo ngay trên trình duyệt</div>
-  </div>
 
   <!-- Thư viện QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
 
-  <!-- JS -->
-  <script src="script.js"></script>
+<div class="container">
+
+  <!-- TIÊU ĐỀ -->
+  <h1>Tạo QR Code</h1>
+
+  <!-- NHẬP NỘI DUNG -->
+  <input id="textInput" type="text" placeholder="Nhập link hoặc nội dung">
+
+
+  <!-- TUỲ CHỌN -->
+  <div class="options">
+
+    <label>Độ dày viền</label>
+    <select id="borderSize">
+      <option value="0">Không viền</option>
+      <option value="2">2px</option>
+      <option value="4">4px</option>
+      <option value="8">8px</option>
+      <option value="12">12px</option>
+    </select>
+
+    <label>Chọn màu viền</label>
+    <input type="color" id="borderColor" value="#000000">
+
+    <label>Bo góc QR</label>
+    <select id="radiusSelect">
+      <option value="0">Vuông</option>
+      <option value="8">Bo nhẹ</option>
+      <option value="12">Bo vừa</option>
+      <option value="20">Bo nhiều</option>
+    </select>
+
+    <label>Chọn logo (tuỳ chọn)</label>
+
+    <div class="logo-box">
+        <input type="file" id="logoInput" accept="image/*">
+
+        <div class="logo-actions">
+            <button type="button" id="changeLogoBtn">Đổi logo</button>
+            <button type="button" id="removeLogoBtn">Xóa logo</button>
+        </div>
+
+        <img id="logoPreview" alt="Logo preview">
+    </div>
+  </div>
+
+  <!-- QR GỐC (ẨN) -->
+  <div id="qrcode" hidden></div>
+
+  <!-- PREVIEW QR -->
+  <canvas id="previewCanvas"></canvas>
+
+  <!-- NÚT TẠO QR (CHÍNH) -->
+  <button id="generateBtn" class="primary-btn">Tạo QR</button>
+  
+  <!-- TẢI QR -->
+  <button id="downloadBtn" class="secondary-btn">Tải QR PNG</button>
+
+</div>
+
+<!-- JS -->
+<script src="script.js"></script>
 </body>
 </html>
