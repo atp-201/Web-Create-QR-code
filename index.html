@@ -7,6 +7,9 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
+  <!-- Font chữ -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP&family=Noto+Sans+KR&family=Noto+Sans&display=swap" rel="stylesheet">
+
 
   <!-- Thư viện QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -18,22 +21,34 @@
 <div class="container glass">
 
   <div class="header">
-    <h1>✨ QR Code Generator</h1>
-    <p>Tạo QR nhanh</p>
+    <h1 data-i18n="title">✨ QR Code Generator</h1>
+    <p data-i18n="subtitle">Tạo QR nhanh</p>
+  </div>
+  <div class="lang-bar">
+    <select id="languageSelect">
+      <option value="vi">🇻🇳 Tiếng Việt</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="zh">🇨🇳 中文</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="ru">🇷🇺 Русский</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="fr">🇫🇷 Français</option>
+    </select>
   </div>
 
   <div class="card">
 
-    <input id="textInput" type="text" placeholder="🔗 Nhập link hoặc nội dung">
-
-    
+    <input id="textInput" 
+    type="text" 
+    data-i18n-placeholder="input"
+    placeholder="🔗 Nhập link hoặc nội dung">
 
     <div class="options">
-
       <div class="option">
-        <label>Độ dày viền</label>
+        <label data-i18n="borderThickness">Độ dày viền</label>
         <select id="borderSize">
-          <option value="0">Không viền</option>
+          <option value="0" data-i18n="borderNone">Không viền</option>
           <option value="4">4px</option>
           <option value="8">8px</option>
           <option value="12">12px</option>
@@ -41,26 +56,26 @@
       </div>
 
       <div class="option">
-        <label>Màu viền</label>
+        <label data-i18n="borderColor">Màu viền</label>
         <input type="color" id="borderColor" value="#4f46e5">
       </div>
 
       <div class="option">
-        <label>Bo góc QR</label>
+        <label data-i18n="cornerRadius">Bo góc QR</label>
         <select id="radiusSelect">
-          <option value="0">Vuông</option>
-          <option value="12">Bo nhẹ</option>
-          <option value="20">Bo nhiều</option>
+          <option value="0" data-i18n="cornerSquare">Vuông</option>
+          <option value="12" data-i18n="cornerSoft">Bo nhẹ</option>
+          <option value="20" data-i18n="cornerStrong">Bo nhiều</option>
         </select>
       </div>
 
       <div class="option">
-        <label>Logo trung tâm</label>
+        <label data-i18n="logoCenter">Logo trung tâm</label>
         <input type="file" id="logoInput" accept="image/*">
 
         <div class="logo-actions">
-          <button id="changeLogoBtn">Đổi</button>
-          <button id="removeLogoBtn">Xóa</button>
+          <button id="changeLogoBtn" data-i18n="changeLogo">Đổi</button>
+          <button id="removeLogoBtn" data-i18n="removeLogo">Xóa</button>
         </div>
 
         <img id="logoPreview">
@@ -68,16 +83,17 @@
 
     </div>
 
+
   </div>
 
   <div class="preview-card">
     <canvas id="previewCanvas"></canvas>
   </div>
-  <button id="generateBtn" class="primary-btn">
+  <button id="generateBtn" class="primary-btn" data-i18n="generate">
       ⚡ Tạo QR ngay
   </button>
 
-  <button id="downloadBtn" class="download-btn">
+  <button id="downloadBtn" class="download-btn" data-i18n="download">
     ⬇️ Tải QR PNG
   </button>
 
