@@ -207,6 +207,14 @@ body.lang-fr {
   }
 }
 
+.site-footer {
+    background-color: #f5f5f5;
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
 /* hoa anh đào rơi */
 #petals-container {
     position: fixed;
@@ -260,4 +268,5 @@ body.lang-fr {
     transform: translateY(120vh);
   }
 }
+
 
