@@ -410,10 +410,10 @@ downloadBtn.addEventListener('click', () => {
         setTimeout(() => petal.remove(), (duration + 2) * 1000);
     }
 
-    // 🌬️ Tạo hoa rơi đều, chậm
+    // Tạo hoa rơi đều, chậm
     setInterval(createPetal, CONFIG.interval);
 
-    // 🌸 Hoa ban đầu (rất nhẹ trên mobile)
+    // Hoa ban đầu (nhẹ trên mobile)
     for (let i = 0; i < CONFIG.initialCount; i++) {
         setTimeout(createPetal, i * 400);
     }
@@ -423,13 +423,13 @@ downloadBtn.addEventListener('click', () => {
   const snowContainer = document.getElementById('snow-container');
   if (!snowContainer) return;
 
-  /* ❄️ CHỈ HIỆN GIÁNG SINH (THÁNG 12 & 1) */
+  /*CHỈ HIỆN GIÁNG SINH (THÁNG 12 & 1) */
   const month = new Date().getMonth() + 1;
   if (!(month === 12 || month === 1)) return;
 
   const isMobile = window.innerWidth <= 600;
 
-  // ⚙️ Cấu hình theo thiết bị
+  // Cấu hình theo thiết bị
   const CONFIG = {
     interval: isMobile ? 900 : 300,     // mobile thưa hơn
     minDuration: isMobile ? 12 : 6,     // mobile rơi chậm
@@ -461,10 +461,10 @@ downloadBtn.addEventListener('click', () => {
     setTimeout(() => snow.remove(), (duration + 2) * 1000);
   }
 
-  /* ❄️ Tuyết rơi đều */
+  /* Tuyết rơi đều */
   setInterval(spawnSnow, CONFIG.interval);
 
-  /* ❄️ Tuyết ban đầu */
+  /* Tuyết ban đầu */
   for (let i = 0; i < CONFIG.initialCount; i++) {
     setTimeout(spawnSnow, i * 350);
   }
