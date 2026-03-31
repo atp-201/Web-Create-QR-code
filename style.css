@@ -207,6 +207,17 @@ body.lang-fr {
   }
 }
 
+/* Footer copyright link */
+.footer-link {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.footer-link:hover {
+    color: #0d532e;       /* Đổi màu hover theo thương hiệu website đó */
+    text-decoration: underline;
+}
+
 .site-footer {
     background-color: #f5f5f5;
     text-align: center;
