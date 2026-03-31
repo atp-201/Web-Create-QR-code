@@ -19,6 +19,12 @@ const previewCtx = previewCanvas.getContext('2d');
 const downloadBtn = document.getElementById('downloadBtn');
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('[id^="year"]').forEach(el => {
+    el.textContent = new Date().getFullYear();
+  });
+});
+
 /* ======================================================
    ĐA NGÔN NGỮ GIAO DIỆN
 ====================================================== */
