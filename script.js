@@ -1,477 +1,312 @@
 /* ======================================================
    LẤY PHẦN TỬ DOM
 ====================================================== */
-const textInput = document.getElementById('textInput');
 const generateBtn = document.getElementById('generateBtn');
-
 const borderSizeSelect = document.getElementById('borderSize');
 const borderColorInput = document.getElementById('borderColor');
 const radiusSelect = document.getElementById('radiusSelect');
-
 const logoInput = document.getElementById('logoInput');
 const logoPreview = document.getElementById('logoPreview');
 const changeLogoBtn = document.getElementById('changeLogoBtn');
 const removeLogoBtn = document.getElementById('removeLogoBtn');
-
 const previewCanvas = document.getElementById('previewCanvas');
 const previewCtx = previewCanvas.getContext('2d');
 
 const downloadBtn = document.getElementById('downloadBtn');
+const downloadJpgBtn = document.getElementById('downloadJpgBtn');
+const downloadSvgBtn = document.getElementById('downloadSvgBtn');
+const shareBtn = document.getElementById('shareBtn');
+const themeToggle = document.getElementById('themeToggle');
 
-
+/* ======================================================
+   KHỞI TẠO & CHẠY NGAY KHI VÀO TRANG
+====================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('[id^="year"]').forEach(el => {
-    el.textContent = new Date().getFullYear();
-  });
+  document.querySelectorAll('[id^="year"]').forEach(el => { el.textContent = new Date().getFullYear(); });
+  if (!navigator.share) shareBtn.style.display = 'none';
+  
+  // TỰ ĐỘNG TẠO QR DEMO ĐỂ CỘT PHẢI KHÔNG BỊ TRỐNG
+  generateQRBase();
 });
 
 /* ======================================================
-   ĐA NGÔN NGỮ GIAO DIỆN
+   DARK MODE THEME
+====================================================== */
+const currentTheme = localStorage.getItem('theme') || 'light';
+if (currentTheme === 'dark') {
+  document.body.classList.add('dark-mode');
+  themeToggle.textContent = '☀️';
+}
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  themeToggle.textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
+/* ======================================================
+   ĐA NGÔN NGỮ
 ====================================================== */
 const translations = {
-  vi: {
-    title: "✨ Trình tạo QR Code",
-    subtitle: "Tạo QR nhanh & đẹp",
-    input: "🔗 Nhập link hoặc nội dung",
-    generate: "⚡ Tạo QR ngay",
-    download: "⬇️ Tải QR PNG",
-    borderThickness: "Độ dày viền",
-    borderNone: "Không viền",
-    borderColor: "Màu viền",
-    cornerRadius: "Bo góc QR",
-    cornerSquare: "Vuông",
-    cornerSoft: "Bo nhẹ",
-    cornerStrong: "Bo nhiều",
-    logoCenter: "Logo trung tâm",
-    changeLogo: "Đổi",
-    removeLogo: "Xóa"
-  },
-  en: {
-    title: "✨ QR Code Generator",
-    subtitle: "Fast & beautiful QR",
-    input: "🔗 Enter text or URL",
-    generate: "⚡ Generate QR",
-    download: "⬇️ Download QR PNG",
-    borderThickness: "Border thickness",
-    borderNone: "No border",
-    borderColor: "Border color",
-    cornerRadius: "QR corner radius",
-    cornerSquare: "Square",
-    cornerSoft: "Rounded",
-    cornerStrong: "Extra rounded",
-    logoCenter: "Center logo",
-    changeLogo: "Change",
-    removeLogo: "Remove"
-
-  },
-  zh: {
-    title: "✨ 二维码生成器",
-    subtitle: "快速生成二维码",
-    input: "🔗 输入内容或链接",
-    generate: "⚡ 生成二维码",
-    download: "⬇️ 下载 PNG",
-    borderThickness: "边框粗细",
-    borderNone: "无边框",
-    borderColor: "边框颜色",
-    cornerRadius: "二维码圆角",
-    cornerSquare: "方形",
-    cornerSoft: "轻微圆角",
-    cornerStrong: "大圆角",
-    logoCenter: "中心Logo",
-    changeLogo: "更换",
-    removeLogo: "删除"
-
-  },
-  ja: {
-    title: "✨ QRコード生成",
-    subtitle: "高速・高品質QR",
-    input: "🔗 テキストまたはURL",
-    generate: "⚡ QR作成",
-    download: "⬇️ ダウンロード",
-    borderThickness: "枠線の太さ",
-    borderNone: "枠なし",
-    borderColor: "枠線の色",
-    cornerRadius: "QR角丸",
-    cornerSquare: "四角",
-    cornerSoft: "少し丸",
-    cornerStrong: "大きく丸",
-    logoCenter: "中央ロゴ",
-    changeLogo: "変更",
-    removeLogo: "削除"
-
-  },
-  ko: {
-    title: "✨ QR 코드 생성기",
-    subtitle: "빠르고 깔끔한 QR",
-    input: "🔗 텍스트 또는 URL",
-    generate: "⚡ QR 생성",
-    download: "⬇️ 다운로드",
-    borderThickness: "테두리 두께",
-    borderNone: "테두리 없음",
-    borderColor: "테두리 색상",
-    cornerRadius: "QR 모서리",
-    cornerSquare: "사각형",
-    cornerSoft: "둥글게",
-    cornerStrong: "많이 둥글게",
-    logoCenter: "중앙 로고",
-    changeLogo: "변경",
-    removeLogo: "삭제"
-
-  },
-  ru: {
-    title: "✨ Генератор QR-кодов",
-    subtitle: "Быстро и красиво",
-    input: "🔗 Введите текст или ссылку",
-    generate: "⚡ Создать QR",
-    download: "⬇️ Скачать PNG",
-    borderThickness: "Толщина рамки",
-    borderNone: "Без рамки",
-    borderColor: "Цвет рамки",
-    cornerRadius: "Скругление QR",
-    cornerSquare: "Квадрат",
-    cornerSoft: "Скругленный",
-    cornerStrong: "Сильно скругленный",
-    logoCenter: "Логотип по центру",
-    changeLogo: "Изменить",
-    removeLogo: "Удалить"
-  },
-  de: {
-    title: "✨ QR-Code Generator",
-    subtitle: "Schnell & modern",
-    input: "🔗 Text oder Link eingeben",
-    generate: "⚡ QR erstellen",
-    download: "⬇️ PNG herunterladen",
-    borderThickness: "Rahmenstärke",
-    borderNone: "Kein Rahmen",
-    borderColor: "Rahmenfarbe",
-    cornerRadius: "QR-Ecken",
-    cornerSquare: "Eckig",
-    cornerSoft: "Abgerundet",
-    cornerStrong: "Stark abgerundet",
-    logoCenter: "Zentrales Logo",
-    changeLogo: "Ändern",
-    removeLogo: "Entfernen"
-  },
-  fr: {
-    title: "✨ Générateur QR Code",
-    subtitle: "Rapide et élégant",
-    input: "🔗 Entrez un texte ou lien",
-    generate: "⚡ Créer QR",
-    download: "⬇️ Télécharger PNG",
-    borderThickness: "Épaisseur de bordure",
-    borderNone: "Sans bordure",
-    borderColor: "Couleur de bordure",
-    cornerRadius: "Coins du QR",
-    cornerSquare: "Carré",
-    cornerSoft: "Arrondi",
-    cornerStrong: "Très arrondi",
-    logoCenter: "Logo central",
-    changeLogo: "Changer",
-    removeLogo: "Supprimer"
-
-  }
+  vi: { title: "✨ Trình tạo QR Code", subtitle: "Nhanh chóng & Sắc nét", input: "Nhập link hoặc nội dung (VD: google.com)", generate: "⚡ Cập nhật QR", downloadPng: "⬇️ Tải PNG", downloadJpg: "🖼️ Tải JPG", downloadSvg: "📐 Tải SVG", shareQr: "📤 Chia sẻ", borderNone: "Không viền ngoài", cornerSquare: "Góc Vuông", cornerSoft: "Bo góc nhẹ", cornerStrong: "Bo góc nhiều", changeLogo: "📁 Chọn ảnh", removeLogo: "🗑️ Xóa", transparentBg: "Nền trong suốt", useGradient: "Bật Gradient", dotSquare: "Chấm Vuông", dotRound: "Chấm Tròn", dotRounded: "Bo góc mềm", dotClassy: "Sang trọng" },
+  en: { title: "✨ QR Code Generator", subtitle: "Fast & Crisp", input: "Enter link or text (e.g. google.com)", generate: "⚡ Update QR", downloadPng: "⬇️ PNG", downloadJpg: "🖼️ JPG", downloadSvg: "📐 SVG", shareQr: "📤 Share", borderNone: "No border", cornerSquare: "Square", cornerSoft: "Rounded", cornerStrong: "Extra rounded", changeLogo: "📁 Upload", removeLogo: "🗑️ Remove", transparentBg: "Transparent", useGradient: "Gradient", dotSquare: "Square", dotRound: "Dots", dotRounded: "Rounded", dotClassy: "Classy" }
 };
 const langSelect = document.getElementById('languageSelect');
-
 function applyLanguage(lang) {
-  // đổi text
+  const dict = translations[lang] || translations['en'];
   document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    el.textContent = translations[lang][key];
+    const key = el.dataset.i18n; if (dict[key]) el.textContent = dict[key];
   });
-
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const key = el.dataset.i18nPlaceholder;
-    el.placeholder = translations[lang][key];
+    const key = el.dataset.i18nPlaceholder; if (dict[key]) el.placeholder = dict[key];
   });
-
-  // ===== ĐỔI FONT THEO NGÔN NGỮ =====
-  document.body.className = ''; // reset
-  document.body.classList.add(`lang-${lang}`);
-
   localStorage.setItem('lang', lang);
 }
+langSelect.addEventListener('change', e => applyLanguage(e.target.value));
+const defaultLang = localStorage.getItem('lang') || 'vi';
+langSelect.value = defaultLang; applyLanguage(defaultLang);
 
-
-// Khi đổi ngôn ngữ
-langSelect.addEventListener('change', e => {
-  applyLanguage(e.target.value);
+/* ======================================================
+   XỬ LÝ CHUYỂN TAB (TEMPLATE)
+====================================================== */
+let currentTab = 'text';
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.input-group').forEach(g => g.classList.remove('active'));
+    const tab = e.target.dataset.tab;
+    e.target.classList.add('active');
+    document.getElementById(`group-${tab}`).classList.add('active');
+    currentTab = tab;
+    generateQRBase(); // Render lại ngay khi đổi tab
+  });
 });
 
-// Tự nhận ngôn ngữ đã lưu
-function detectBrowserLanguage() {
-  const lang = navigator.language.toLowerCase();
-
-  if (lang.startsWith('vi')) return 'vi';
-  if (lang.startsWith('en')) return 'en';
-  if (lang.startsWith('zh')) return 'zh';
-  if (lang.startsWith('ja')) return 'ja';
-  if (lang.startsWith('ko')) return 'ko';
-  if (lang.startsWith('ru')) return 'ru';
-  if (lang.startsWith('de')) return 'de';
-  if (lang.startsWith('fr')) return 'fr';
-
-  return 'en'; // fallback
+function getQRFormattedText() {
+  if (currentTab === 'text') return document.getElementById('textInput').value.trim();
+  if (currentTab === 'wifi') {
+    const ssid = document.getElementById('wifiSsid').value.trim();
+    const pass = document.getElementById('wifiPass').value.trim();
+    if (!ssid) return ''; return `WIFI:S:${ssid};T:WPA;P:${pass};;`;
+  }
+  if (currentTab === 'vcard') {
+    const name = document.getElementById('vcardName').value.trim();
+    const phone = document.getElementById('vcardPhone').value.trim();
+    const email = document.getElementById('vcardEmail').value.trim();
+    if (!name && !phone) return ''; return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
+  }
+  if (currentTab === 'email') {
+    const to = document.getElementById('emailTo').value.trim();
+    const sub = document.getElementById('emailSub').value.trim();
+    const body = document.getElementById('emailBody').value.trim();
+    if (!to) return ''; return `mailto:${to}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
+  }
+  if (currentTab === 'sms') {
+    const phone = document.getElementById('smsPhone').value.trim();
+    const msg = document.getElementById('smsMsg').value.trim();
+    if (!phone) return ''; return `smsto:${phone}:${msg}`;
+  }
+  return '';
 }
 
-// Ưu tiên ngôn ngữ đã lưu
-const savedLang = localStorage.getItem('lang');
-const defaultLang = savedLang || detectBrowserLanguage();
+/* ======================================================
+   CẤU HÌNH THƯ VIỆN & DEBOUNCE
+====================================================== */
+const qrCode = new QRCodeStyling({
+  width: 800, height: 800, margin: 0,
+  qrOptions: { errorCorrectionLevel: 'H' },
+  backgroundOptions: { color: "transparent" }, 
+  imageOptions: { crossOrigin: "anonymous", margin: 15, imageSize: 0.3 }
+});
+let currentQRImage = null; 
 
-languageSelect.value = defaultLang;
-applyLanguage(defaultLang);
+let typingTimer;
+document.querySelectorAll('.qr-input').forEach(input => {
+  input.addEventListener('input', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(generateQRBase, 400); 
+  });
+});
+document.querySelectorAll('#qrColor1, #qrColor2').forEach(input => {
+  input.addEventListener('input', () => {
+    clearTimeout(typingTimer); typingTimer = setTimeout(generateQRBase, 300);
+  });
+});
+document.querySelectorAll('#useGradient, #dotStyle').forEach(el => el.addEventListener('change', generateQRBase));
 
 /* ======================================================
-   TẠO QR GỐC (DÙNG qrcodejs)
+   HÀM TẠO QR VÀ VẼ LÊN CANVAS
 ====================================================== */
 function generateQRBase() {
-  const text = textInput.value.trim();
+  const text = getQRFormattedText();
   if (!text) {
-    alert('Vui lòng nhập nội dung');
-    return;
+      previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+      return; 
   }
 
-  const qrDiv = document.getElementById('qrcode');
-  qrDiv.innerHTML = '';
+  const color1 = document.getElementById('qrColor1').value;
+  const color2 = document.getElementById('qrColor2').value;
+  const useGradient = document.getElementById('useGradient').checked;
+  const dotType = document.getElementById('dotStyle').value;
 
-  new QRCode(qrDiv, {
-    text: text,
-    width: 220,
-    height: 220
+  let dotsOptions = { type: dotType, color: color1 };
+  if (useGradient) {
+    dotsOptions.gradient = {
+      type: "linear", rotation: 0.785398, 
+      colorStops: [{ offset: 0, color: color1 }, { offset: 1, color: color2 }]
+    };
+  }
+
+  qrCode.update({
+    data: text,
+    dotsOptions: dotsOptions,
+    image: logoInput.files[0] ? URL.createObjectURL(logoInput.files[0]) : null
   });
 
-  // Đợi QR render xong rồi mới vẽ preview
-  setTimeout(updatePreview, 100);
+  qrCode.getRawData("png").then(blob => {
+    const img = new Image();
+    img.onload = () => { currentQRImage = img; updatePreviewCanvas(); };
+    img.src = URL.createObjectURL(blob);
+  });
 }
 
-
-/* ======================================================
-   HÀM VẼ HÌNH CHỮ NHẬT BO GÓC (CANVAS)
-====================================================== */
 function drawRoundedRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.closePath();
+  ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
 }
 
-
-/* ======================================================
-   VẼ PREVIEW QR (VIỀN + BO GÓC + LOGO)
-====================================================== */
-function updatePreview() {
-  const qrCanvas = document.querySelector('#qrcode canvas');
-  if (!qrCanvas) return;
-
-  const border = parseInt(borderSizeSelect.value);
+function updatePreviewCanvas() {
+  if (!currentQRImage) return;
+  const scaleRatio = 800 / 220; 
+  const border = parseInt(borderSizeSelect.value) * scaleRatio;
   const borderColor = borderColorInput.value;
-  const radius = parseInt(radiusSelect.value);
+  const radius = parseInt(radiusSelect.value) * scaleRatio;
+  const bgColor = document.getElementById('bgColor').value;
+  const isTransparent = document.getElementById('transparentBg').checked;
 
-  const size = qrCanvas.width + border * 2;
-
-  previewCanvas.width = size;
-  previewCanvas.height = size;
-  previewCanvas.style.display = 'block';
-
+  const size = 800 + border * 2;
+  previewCanvas.width = size; previewCanvas.height = size;
   previewCtx.clearRect(0, 0, size, size);
-
-  /* ---- Vẽ nền + viền bo góc ---- */
-  drawRoundedRect(previewCtx, 0, 0, size, size, radius);
-  previewCtx.fillStyle = border > 0 ? borderColor : '#ffffff';
-  previewCtx.fill();
-
-  /* ---- Cắt canvas theo bo góc ---- */
   previewCtx.save();
+  
   drawRoundedRect(previewCtx, 0, 0, size, size, radius);
   previewCtx.clip();
 
-  /* ---- Vẽ QR ---- */
-  previewCtx.drawImage(qrCanvas, border, border);
-
-  /* ---- Vẽ logo (nếu có) ---- */
-  if (logoInput.files[0]) {
-    const img = new Image();
-    img.onload = () => {
-      const logoSize = qrCanvas.width * 0.25;
-      const x = (size - logoSize) / 2;
-      const y = (size - logoSize) / 2;
-
-      // nền trắng sau logo để dễ scan
-      previewCtx.fillStyle = '#ffffff';
-      previewCtx.fillRect(x - 6, y - 6, logoSize + 12, logoSize + 12);
-
-      previewCtx.drawImage(img, x, y, logoSize, logoSize);
-    };
-    img.src = URL.createObjectURL(logoInput.files[0]);
+  if (!isTransparent) {
+    previewCtx.fillStyle = border > 0 ? borderColor : bgColor; previewCtx.fill();
+    if (border > 0) { previewCtx.fillStyle = bgColor; previewCtx.fillRect(border, border, 800, 800); }
+  } else {
+    if (border > 0) { previewCtx.lineWidth = border * 2; previewCtx.strokeStyle = borderColor; previewCtx.stroke(); }
   }
 
+  previewCtx.drawImage(currentQRImage, border, border, 800, 800);
   previewCtx.restore();
 }
 
+document.querySelectorAll('#borderSize, #borderColor, #radiusSelect, #bgColor, #transparentBg').forEach(el => {
+  el.addEventListener('change', updatePreviewCanvas);
+  if(el.type === 'color') el.addEventListener('input', updatePreviewCanvas);
+});
 
 /* ======================================================
-   LOGO: CHỌN – PREVIEW
+   SỰ KIỆN NÚT BẤM & TẢI XUỐNG
 ====================================================== */
-logoInput.addEventListener('change', () => {
-  const file = logoInput.files[0];
-  if (!file) return;
+generateBtn.addEventListener('click', () => {
+  const text = getQRFormattedText();
+  if (!text) { alert('Vui lòng nhập nội dung!'); return; }
+  generateQRBase();
+});
 
+changeLogoBtn.addEventListener('click', () => logoInput.click());
+logoInput.addEventListener('change', () => {
+  if (!logoInput.files[0]) return;
   const reader = new FileReader();
   reader.onload = (e) => {
-    logoPreview.src = e.target.result;
-    logoPreview.style.display = 'block';
-    updatePreview();
+    logoPreview.src = e.target.result; logoPreview.style.display = 'block';
+    generateQRBase(); 
   };
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(logoInput.files[0]);
 });
-
-
-/* ======================================================
-   NÚT ĐỔI LOGO
-====================================================== */
-changeLogoBtn.addEventListener('click', () => {
-  logoInput.click();
-});
-
-
-/* ======================================================
-   NÚT XOÁ LOGO
-====================================================== */
 removeLogoBtn.addEventListener('click', () => {
-  logoInput.value = '';
-  logoPreview.src = '';
-  logoPreview.style.display = 'none';
-  updatePreview();
+  logoInput.value = ''; logoPreview.src = ''; logoPreview.style.display = 'none';
+  generateQRBase();
 });
 
-
-/* ======================================================
-   REALTIME PREVIEW KHI CHỈNH
-====================================================== */
-borderSizeSelect.addEventListener('change', updatePreview);
-borderColorInput.addEventListener('input', updatePreview);
-radiusSelect.addEventListener('change', updatePreview);
-
-
-/* ======================================================
-   NÚT TẠO QR
-====================================================== */
-generateBtn.addEventListener('click', generateQRBase);
-
-
-/* ======================================================
-   TẢI QR PNG
-====================================================== */
+// TẢI PNG
 downloadBtn.addEventListener('click', () => {
   if (!previewCanvas.width) return;
+  const link = document.createElement('a');
+  link.download = `qr-code-${Math.floor(Date.now() / 1000)}.png`;
+  link.href = previewCanvas.toDataURL('image/png'); link.click();
+});
+
+// TẢI JPG (Xử lý lót nền trắng nếu đang ở chế độ trong suốt)
+downloadJpgBtn.addEventListener('click', () => {
+  if (!previewCanvas.width) return;
+  
+  // Tạo canvas phụ để đổ nền trắng
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = previewCanvas.width;
+  tempCanvas.height = previewCanvas.height;
+  const tempCtx = tempCanvas.getContext('2d');
+  
+  // Đổ màu trắng nền cứng
+  tempCtx.fillStyle = '#ffffff';
+  tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+  
+  // Vẽ đè ảnh canvas hiện tại lên
+  tempCtx.drawImage(previewCanvas, 0, 0);
 
   const link = document.createElement('a');
-  link.download = 'qr-code.png';
-  link.href = previewCanvas.toDataURL('image/png');
+  link.download = `qr-code-${Math.floor(Date.now() / 1000)}.jpg`;
+  link.href = tempCanvas.toDataURL('image/jpeg', 1.0); // Chất lượng 100%
   link.click();
 });
 
+// TẢI SVG
+downloadSvgBtn.addEventListener('click', () => {
+  if (!currentQRImage) return;
+  qrCode.download({ name: `qr-vector-${Math.floor(Date.now() / 1000)}`, extension: "svg" });
+});
+
+// CHIA SẺ
+shareBtn.addEventListener('click', async () => {
+  if (!previewCanvas.width || !navigator.share) return;
+  previewCanvas.toBlob(async (blob) => {
+    try {
+      await navigator.share({ title: 'Mã QR của tôi', files: [new File([blob], 'qr-code.png', { type: 'image/png' })] });
+    } catch (err) { console.log('Hủy chia sẻ', err); }
+  });
+});
+
+/* ======================================================
+   HIỆU ỨNG THỜI TIẾT (GIỮ NGUYÊN)
+====================================================== */
 (function () {
     const container = document.getElementById('petals-container');
-    if (!container) return;
-
-    const month = new Date().getMonth() + 1;
-    if (month < 1 || month > 2) return;
-
-    const isMobile = window.innerWidth <= 600;
-
-    // ⚙️ Cấu hình theo thiết bị
-    const CONFIG = {
-        interval: isMobile ? 900 : 350,   // mobile thưa hơn
-        minDuration: isMobile ? 10 : 6,   // mobile rơi chậm
-        maxDuration: isMobile ? 16 : 9,
-        initialCount: isMobile ? 4 : 10   // mobile ít hoa lúc đầu
-    };
-
+    if (!container) return; const month = new Date().getMonth() + 1; if (month < 1 || month > 2) return;
+    const isMobile = window.innerWidth <= 600; const CONFIG = { interval: isMobile ? 900 : 350, minDuration: isMobile ? 10 : 6, maxDuration: isMobile ? 16 : 9, initialCount: isMobile ? 4 : 10 };
     function createPetal() {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-
-        const size = Math.random() * 4 + 6;
-        const duration =
-            Math.random() * (CONFIG.maxDuration - CONFIG.minDuration)
-            + CONFIG.minDuration;
-
-        petal.style.left = Math.random() * 100 + 'vw';
-        petal.style.width = size + 'px';
-        petal.style.height = size * 1.3 + 'px';
-        petal.style.animationDuration = duration + 's';
-        petal.style.opacity = Math.random() * 0.3 + 0.35;
-        petal.style.transform = `rotate(${Math.random() * 360}deg)`;
-
-        container.appendChild(petal);
-
-        setTimeout(() => petal.remove(), (duration + 2) * 1000);
+        const petal = document.createElement('div'); petal.className = 'petal';
+        const size = Math.random() * 4 + 6; const duration = Math.random() * (CONFIG.maxDuration - CONFIG.minDuration) + CONFIG.minDuration;
+        petal.style.left = Math.random() * 100 + 'vw'; petal.style.width = size + 'px'; petal.style.height = size * 1.3 + 'px'; petal.style.animationDuration = duration + 's'; petal.style.opacity = Math.random() * 0.3 + 0.35; petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+        container.appendChild(petal); setTimeout(() => petal.remove(), (duration + 2) * 1000);
     }
-
-    // Tạo hoa rơi đều, chậm
-    setInterval(createPetal, CONFIG.interval);
-
-    // Hoa ban đầu (nhẹ trên mobile)
-    for (let i = 0; i < CONFIG.initialCount; i++) {
-        setTimeout(createPetal, i * 400);
-    }
+    setInterval(createPetal, CONFIG.interval); for (let i = 0; i < CONFIG.initialCount; i++) setTimeout(createPetal, i * 400);
 })();
-
 (function () {
   const snowContainer = document.getElementById('snow-container');
-  if (!snowContainer) return;
-
-  /*CHỈ HIỆN GIÁNG SINH (THÁNG 12 & 1) */
-  const month = new Date().getMonth() + 1;
-  if (!(month === 12 || month === 1)) return;
-
-  const isMobile = window.innerWidth <= 600;
-
-  // Cấu hình theo thiết bị
-  const CONFIG = {
-    interval: isMobile ? 900 : 300,     // mobile thưa hơn
-    minDuration: isMobile ? 12 : 6,     // mobile rơi chậm
-    maxDuration: isMobile ? 18 : 10,
-    minSize: isMobile ? 3 : 4,
-    maxSize: isMobile ? 6 : 8,
-    initialCount: isMobile ? 5 : 14
-  };
-
+  if (!snowContainer) return; const month = new Date().getMonth() + 1; if (!(month === 12 || month === 1)) return;
+  const isMobile = window.innerWidth <= 600; const CONFIG = { interval: isMobile ? 900 : 300, minDuration: isMobile ? 12 : 6, maxDuration: isMobile ? 18 : 10, minSize: isMobile ? 3 : 4, maxSize: isMobile ? 6 : 8, initialCount: isMobile ? 5 : 14 };
   function spawnSnow() {
-    const snow = document.createElement('div');
-    snow.className = 'snowflake';
-
-    const size =
-      Math.random() * (CONFIG.maxSize - CONFIG.minSize) + CONFIG.minSize;
-
-    const duration =
-      Math.random() * (CONFIG.maxDuration - CONFIG.minDuration)
-      + CONFIG.minDuration;
-
-    snow.style.width = size + 'px';
-    snow.style.height = size + 'px';
-    snow.style.left = Math.random() * 100 + 'vw';
-    snow.style.animationDuration = duration + 's';
-    snow.style.opacity = Math.random() * 0.4 + 0.4;
-
-    snowContainer.appendChild(snow);
-
-    setTimeout(() => snow.remove(), (duration + 2) * 1000);
+    const snow = document.createElement('div'); snow.className = 'snowflake';
+    const size = Math.random() * (CONFIG.maxSize - CONFIG.minSize) + CONFIG.minSize; const duration = Math.random() * (CONFIG.maxDuration - CONFIG.minDuration) + CONFIG.minDuration;
+    snow.style.width = size + 'px'; snow.style.height = size + 'px'; snow.style.left = Math.random() * 100 + 'vw'; snow.style.animationDuration = duration + 's'; snow.style.opacity = Math.random() * 0.4 + 0.4;
+    snowContainer.appendChild(snow); setTimeout(() => snow.remove(), (duration + 2) * 1000);
   }
-
-  /* Tuyết rơi đều */
-  setInterval(spawnSnow, CONFIG.interval);
-
-  /* Tuyết ban đầu */
-  for (let i = 0; i < CONFIG.initialCount; i++) {
-    setTimeout(spawnSnow, i * 350);
-  }
+  setInterval(spawnSnow, CONFIG.interval); for (let i = 0; i < CONFIG.initialCount; i++) setTimeout(spawnSnow, i * 350);
 })();
