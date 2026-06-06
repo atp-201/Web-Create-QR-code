@@ -4,15 +4,9 @@
   <meta charset="UTF-8">
   <title>Tạo QR Code Online</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
-  <!-- Font chữ -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+JP&family=Noto+Sans+KR&family=Noto+Sans&display=swap" rel="stylesheet">
-
-
-  <!-- Thư viện QR -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 </head>
 <body>
 
@@ -20,89 +14,157 @@
 
 <div class="container glass">
 
-  <div class="header">
-    <h1 data-i18n="title">✨ QR Code Generator</h1>
-    <p data-i18n="subtitle">Tạo QR nhanh</p>
+  <div class="header-section">
+    <div class="header-text">
+      <h1 data-i18n="title">✨ Trình tạo QR Code</h1>
+      <p data-i18n="subtitle">Nhanh chóng & Sắc nét</p>
+    </div>
+    
+    <div class="top-controls">
+      <select id="languageSelect" class="lang-select">
+        <option value="vi">🇻🇳 VN</option>
+        <option value="en">🇬🇧 EN</option>
+        <option value="zh">🇨🇳 ZH</option>
+        <option value="ja">🇯🇵 JA</option>
+        <option value="ko">🇰🇷 KO</option>
+      </select>
+      <button id="themeToggle" class="theme-btn" title="Giao diện Sáng/Tối">🌙</button>
+    </div>
   </div>
-  <div class="lang-bar">
-    <select id="languageSelect">
-      <option value="vi">🇻🇳 Tiếng Việt</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="zh">🇨🇳 中文</option>
-      <option value="ja">🇯🇵 日本語</option>
-      <option value="ko">🇰🇷 한국어</option>
-      <option value="ru">🇷🇺 Русский</option>
-      <option value="de">🇩🇪 Deutsch</option>
-      <option value="fr">🇫🇷 Français</option>
-    </select>
-  </div>
 
-  <div class="card">
-
-    <input id="textInput" 
-    type="text" 
-    data-i18n-placeholder="input"
-    placeholder="🔗 Nhập link hoặc nội dung không dấu">
-
-    <div class="options">
-      <div class="option">
-        <label data-i18n="borderThickness">Độ dày viền</label>
-        <select id="borderSize">
-          <option value="0" data-i18n="borderNone">Không viền</option>
-          <option value="4">4px</option>
-          <option value="8">8px</option>
-          <option value="12">12px</option>
-        </select>
-      </div>
-
-      <div class="option">
-        <label data-i18n="borderColor">Màu viền</label>
-        <input type="color" id="borderColor" value="#4f46e5">
-      </div>
-
-      <div class="option">
-        <label data-i18n="cornerRadius">Bo góc QR</label>
-        <select id="radiusSelect">
-          <option value="0" data-i18n="cornerSquare">Vuông</option>
-          <option value="12" data-i18n="cornerSoft">Bo nhẹ</option>
-          <option value="20" data-i18n="cornerStrong">Bo nhiều</option>
-        </select>
-      </div>
-
-      <div class="option">
-        <label data-i18n="logoCenter">Logo trung tâm</label>
-        <input type="file" id="logoInput" accept="image/*">
-
-        <div class="logo-actions">
-          <button id="changeLogoBtn" data-i18n="changeLogo">Đổi</button>
-          <button id="removeLogoBtn" data-i18n="removeLogo">Xóa</button>
+  <div class="layout-wrapper">
+    
+    <div class="left-column">
+      
+      <div class="card input-card">
+        <div class="qr-tabs">
+          <button class="tab-btn active" data-tab="text">🔗 Link/Chữ</button>
+          <button class="tab-btn" data-tab="wifi">📶 WiFi</button>
+          <button class="tab-btn" data-tab="vcard">📇 Liên hệ</button>
+          <button class="tab-btn" data-tab="email">📧 Email</button>
+          <button class="tab-btn" data-tab="sms">💬 SMS</button>
         </div>
 
-        <img id="logoPreview">
+        <div class="input-groups">
+          <div class="input-group active" id="group-text">
+            <input id="textInput" class="qr-input" type="text" data-i18n-placeholder="input" placeholder="Nhập link hoặc nội dung (VD: google.com)" value="https://google.com">
+          </div>
+          <div class="input-group" id="group-wifi">
+            <input id="wifiSsid" class="qr-input" type="text" placeholder="Tên mạng WiFi (SSID)">
+            <input id="wifiPass" class="qr-input" type="text" placeholder="Mật khẩu WiFi">
+          </div>
+          <div class="input-group" id="group-vcard">
+            <input id="vcardName" class="qr-input" type="text" placeholder="Họ và Tên">
+            <input id="vcardPhone" class="qr-input" type="tel" placeholder="Số điện thoại">
+            <input id="vcardEmail" class="qr-input" type="email" placeholder="Email">
+          </div>
+          <div class="input-group" id="group-email">
+            <input id="emailTo" class="qr-input" type="email" placeholder="Email người nhận">
+            <input id="emailSub" class="qr-input" type="text" placeholder="Tiêu đề email">
+            <input id="emailBody" class="qr-input" type="text" placeholder="Nội dung email">
+          </div>
+          <div class="input-group" id="group-sms">
+            <input id="smsPhone" class="qr-input" type="tel" placeholder="Số điện thoại nhận">
+            <input id="smsMsg" class="qr-input" type="text" placeholder="Nội dung tin nhắn">
+          </div>
+        </div>
+        
+        <button id="generateBtn" class="primary-btn" data-i18n="generate">⚡ Cập nhật QR</button>
       </div>
 
+      <div class="card settings-card">
+        <h3 class="settings-title">⚙️ Tùy chỉnh Nâng cao</h3>
+        
+        <details class="custom-accordion">
+          <summary data-i18n="qrColorTitle">🎨 Màu sắc & Kiểu chấm</summary>
+          <div class="accordion-content">
+            <div class="flex-row">
+              <div class="color-picker-group">
+                <input type="color" id="qrColor1" value="#000000" title="Màu chính">
+                <label>Màu QR</label>
+              </div>
+              <div class="color-picker-group">
+                <input type="color" id="qrColor2" value="#4f46e5" title="Màu Gradient">
+                <label>Gradient</label>
+              </div>
+              <label class="checkbox-label" style="margin-left: auto;">
+                <input type="checkbox" id="useGradient"> <span data-i18n="useGradient">Bật Gradient</span>
+              </label>
+            </div>
+            <select id="dotStyle" class="modern-select">
+              <option value="square" data-i18n="dotSquare">Chấm Vuông (Cơ bản)</option>
+              <option value="dots" data-i18n="dotRound">Chấm Tròn</option>
+              <option value="rounded" data-i18n="dotRounded">Bo góc mềm</option>
+              <option value="classy" data-i18n="dotClassy">Sang trọng (Classy)</option>
+            </select>
+          </div>
+        </details>
+
+        <details class="custom-accordion">
+          <summary data-i18n="bgColorTitle">🔲 Nền, Viền & Bo góc</summary>
+          <div class="accordion-content">
+            <div class="flex-row">
+              <div class="color-picker-group">
+                <input type="color" id="bgColor" value="#ffffff" title="Màu nền">
+                <label>Nền</label>
+              </div>
+              <div class="color-picker-group">
+                <input type="color" id="borderColor" value="#4f46e5" title="Màu viền">
+                <label>Viền</label>
+              </div>
+              <label class="checkbox-label" style="margin-left: auto;">
+                <input type="checkbox" id="transparentBg"> <span data-i18n="transparentBg">Nền trong suốt</span>
+              </label>
+            </div>
+            
+            <div class="flex-row" style="margin-top: 10px;">
+              <select id="borderSize" class="modern-select" style="flex: 1; margin-bottom: 0;">
+                <option value="0" data-i18n="borderNone">Không viền ngoài</option>
+                <option value="4">Viền mỏng (4px)</option>
+                <option value="8">Viền vừa (8px)</option>
+                <option value="12">Viền dày (12px)</option>
+              </select>
+              <select id="radiusSelect" class="modern-select" style="flex: 1; margin-bottom: 0; margin-left: 10px;">
+                <option value="0" data-i18n="cornerSquare">Góc Vuông</option>
+                <option value="12" data-i18n="cornerSoft">Bo góc nhẹ</option>
+                <option value="20" data-i18n="cornerStrong">Bo góc nhiều</option>
+              </select>
+            </div>
+          </div>
+        </details>
+
+        <details class="custom-accordion">
+          <summary data-i18n="logoCenter">🖼️ Thêm Logo ở giữa</summary>
+          <div class="accordion-content">
+            <input type="file" id="logoInput" accept="image/*" class="file-input">
+            <div class="logo-actions">
+              <button id="changeLogoBtn" class="secondary-btn" data-i18n="changeLogo">📁 Chọn ảnh</button>
+              <button id="removeLogoBtn" class="danger-btn" data-i18n="removeLogo">🗑️ Xóa</button>
+            </div>
+            <img id="logoPreview" class="logo-preview-img">
+          </div>
+        </details>
+      </div>
+    </div>
+    
+    <div class="right-column">
+      <div class="card preview-section" id="previewContainer">
+        <div class="canvas-wrapper">
+          <canvas id="previewCanvas"></canvas>
+        </div>
+        
+        <div class="action-buttons">
+          <button id="downloadBtn" class="download-btn" data-i18n="downloadPng">⬇️ Tải PNG</button>
+          <button id="downloadJpgBtn" class="download-btn jpg-btn" data-i18n="downloadJpg">🖼️ Tải JPG</button>
+          <button id="downloadSvgBtn" class="download-btn secondary" data-i18n="downloadSvg">📐 Tải SVG</button>
+          <button id="shareBtn" class="download-btn share" data-i18n="shareQr">📤 Chia sẻ</button>
+        </div>
+      </div>
     </div>
 
-
-  </div>
-
-  <div class="preview-card">
-    <canvas id="previewCanvas"></canvas>
-  </div>
-  <button id="generateBtn" class="primary-btn" data-i18n="generate">
-      ⚡ Tạo QR ngay
-  </button>
-
-  <button id="downloadBtn" class="download-btn" data-i18n="download">
-    ⬇️ Tải QR PNG
-  </button>
-
-</div>
-
-<div id="qrcode" hidden></div>
-<footer class="site-footer">
-  <div class="container">
-    <p><a href="https://atp-201.github.io/ruou-co-dao/" target="_blank" rel="noopener noreferrer" class="footer-link">&copy; <span id="year"></span> Rượu Cô Đào</a></p>
+  </div> </div> <footer class="site-footer">
+  <div class="container" style="max-width: 900px;">
+    <p><a href="https://atp-201.github.io/ruou-co-dao/" target="_blank" class="footer-link">&copy; <span id="year"></span> Rượu Cô Đào</a></p>
   </div>
   <div id="petals-container"></div>
   <div id="snow-container"></div>
@@ -110,6 +172,4 @@
 
 <script src="script.js"></script>
 </body>
-
 </html>
-
