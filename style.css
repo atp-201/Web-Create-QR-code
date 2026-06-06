@@ -17,7 +17,7 @@ body {
 
 .container { max-width: 900px; margin: auto; padding: 20px 16px; position: relative; }
 
-/* HEADER THIẾT KẾ MỚI */
+/* HEADER*/
 .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; color: #fff; }
 .header-text h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
 .header-text p { font-size: 14px; opacity: 0.9; }
